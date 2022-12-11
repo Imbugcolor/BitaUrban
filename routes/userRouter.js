@@ -2,6 +2,7 @@ const router = require('express').Router()
 const userCtrl = require('../controllers/userCtrl')
 const auth = require('../middleware/auth')
 const authAdmin = require('../middleware/authAdmin')
+const authShipper = require('../middleware/authShipper')
 
 router.post('/register', userCtrl.register)
 
@@ -40,5 +41,9 @@ router.post('/addstaff', auth, authAdmin, userCtrl.addStaff)
 router.post('/verifyphonenumber', auth, userCtrl.verifySmsPhone)
 
 router.post('/verifycodesms', auth, userCtrl.verifyCodeSmsCheck)
+
+router.get('/myordersshipper', auth, authShipper, userCtrl.myOrdersShipper)
+
+router.post('/addshipper', auth, authAdmin, userCtrl.addShipper)
 
 module.exports = router

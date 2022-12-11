@@ -1,13 +1,13 @@
 const Users = require('../models/userModels')
 
-const authAdmin = async (req, res, next) => {
+const authShipper = async (req, res, next) => {
     try {
         //Get user information by id
         const user = await Users.findOne({
             _id: req.user.id
         })
-        if(user.role !== 1)
-            return res.status(400).json({msg: 'Admin resources access denied'})
+        if(user.role !== 2)
+            return res.status(400).json({msg: 'Shipper resources access denied'})
         
         next()
     } catch (err) {
@@ -15,4 +15,4 @@ const authAdmin = async (req, res, next) => {
     }
 }
 
-module.exports = authAdmin
+module.exports = authShipper

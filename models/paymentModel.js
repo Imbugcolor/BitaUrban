@@ -42,6 +42,11 @@ const paymentSchema = new mongoose.Schema({
     status: {
         type: String,
         default: 'Pending'
+    },
+    shipper_id: { 
+        type: String,
+        require: true,
+        default: ''
     }
 },{
     timestamps: true

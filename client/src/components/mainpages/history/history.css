@@ -176,7 +176,7 @@ th, td {
     align-items: center;
 }
 
-.pay-infor-wrapper .cancel-order {
+.pay-infor-wrapper .cancel-order, .pay-infor-wrapper .cancel-order-disabled {
     margin-top: 25px;
     text-align: center;
 }
@@ -200,9 +200,12 @@ th, td {
     transition: 0.5s;
 }
 
-.pay-infor-wrapper .cancel-order button:hover {
-    color: crimson;
-    background-color: #fff;
+.pay-infor-wrapper .cancel-order-disabled button{
+    background-color: #d5d6d7;
+    height: 45px;
+    width: 100%;
+    font-size: 15px;
+    text-transform: uppercase;
     transition: 0.5s;
 }
 

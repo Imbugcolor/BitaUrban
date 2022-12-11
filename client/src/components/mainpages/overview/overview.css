@@ -99,7 +99,21 @@
     background-color: #fff3cd;
     border-color: #ffecb5;
 }
-
+.picked-bg{
+    color: #664d03;
+    background-color: #fff3cd;
+    border-color: #ffecb5;
+}
+.on-shipping-bg {
+    color: #d80630;
+    background-color: #f6aec1;
+    border-color: #f6aec1;
+}
+.shipped-bg {
+    color: #068419;
+    background-color: #95ffb9;
+    border-color: #95ffb9;
+}
 
 .card-chart{
     overflow: hidden;

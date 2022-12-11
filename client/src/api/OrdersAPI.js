@@ -5,6 +5,7 @@ import axios from 'axios'
 function OrdersAPI(token) {
   
     const [orders, setOrders] = useState([])
+    const [ordersOnShip, setOrdersOnShip] = useState([])
     const [dataFilter, setDataFilter] = useState([])
     const [sort, setSort] = useState('')
     const [callback, setCallback] = useState(false)
@@ -24,11 +25,24 @@ function OrdersAPI(token) {
                 }
             }
             getOrders()
+
+            const getOrdersOnShip = async () => {
+                try {
+                    const res = await axios.get(`/api/ordersonship?status=Delivering to the carrier&sort=-updatedAt`, {
+                        headers: { Authorization: token }
+                    })
+                    setOrdersOnShip(res.data);
+                } catch (err) {
+                    console.log(err.response.data.msg)
+                }
+            }
+            getOrdersOnShip()
         }         
       }, [token, sort, status, callback]);
 
   return {
     orders: [orders, setOrders],
+    ordersOnShip: [ordersOnShip, setOrdersOnShip],
     dataFilter: [dataFilter, setDataFilter],
     status: [status, setStatus],
     sort: [sort, setSort],

@@ -6,27 +6,25 @@ import * as FaIcons from 'react-icons/fa'
 import { BsTruck, BsPaypal } from 'react-icons/bs'
 import moment from 'moment'
 
-function ListOrders() {
+function OrdersOnShip() {
 
     const state = useContext(GlobalState)
-    const [orders, setOrders] = state.ordersAPI.orders
-    const [data] = state.ordersAPI.dataFilter
-    const [sort, setSort] = state.ordersAPI.sort
-    const [status, setStatus] = state.ordersAPI.status
+    const [ordersOnShip, setOrdersOnShip] = state.ordersAPI.ordersOnShip
+    const [status, setStatus] = useState('Shipping')
     const [searchPhrase, setSearchPhrase] = useState('')
 
 
 
-    const search = (e) => {
-        const matchedOrder = data.filter((order) => {
-            return order._id.toString().toLowerCase().includes(e.target.value.toLowerCase()) ||
-                ((order.name || order.address.recipient_name).toLowerCase().includes(e.target.value.toLowerCase())) ||
-                order.email?.toLowerCase().includes(e.target.value.toLowerCase()) || order.phone?.includes(e.target.value.toLowerCase())
-        })
+    // const search = (e) => {
+    //     const matchedOrder = data.filter((order) => {
+    //         return order._id.toString().toLowerCase().includes(e.target.value.toLowerCase()) ||
+    //             ((order.name || order.address.recipient_name).toLowerCase().includes(e.target.value.toLowerCase())) ||
+    //             order.email?.toLowerCase().includes(e.target.value.toLowerCase()) || order.phone?.includes(e.target.value.toLowerCase())
+    //     })
 
-        setOrders(matchedOrder)
-        setSearchPhrase(e.target.value)
-    }
+    //     setOrdersOnShip(matchedOrder)
+    //     setSearchPhrase(e.target.value)
+    // }
 
     // Paginate
     const [currentItems, setCurrentItems] = useState([]);
@@ -36,12 +34,12 @@ function ListOrders() {
 
     useEffect(() => {
         const endOffset = itemOffset + itemsPerPage;
-        setCurrentItems(orders.slice(itemOffset, endOffset));
-        setPageCount(Math.ceil(orders.length / itemsPerPage));
-    }, [itemOffset, itemsPerPage, orders])
+        setCurrentItems(ordersOnShip.slice(itemOffset, endOffset));
+        setPageCount(Math.ceil(ordersOnShip.length / itemsPerPage));
+    }, [itemOffset, itemsPerPage, ordersOnShip])
 
     const handlePageClick = (event) => {
-        const newOffset = (event.selected * itemsPerPage) % orders.length;
+        const newOffset = (event.selected * itemsPerPage) % ordersOnShip.length;
         setItemOffset(newOffset);
     };
 
@@ -52,71 +50,34 @@ function ListOrders() {
     return (
         <div>
             <div className='content-header'>
-                <h2>Orders</h2>
+                <h2>Orders on Ship</h2>
             </div>
 
             <div className="content-wrapper">
                 <div className="ctrl-order">
-                    <div className='search-order-by'>
+                    {/* <div className='search-order-by'>
                         <input className="search-order-input" value={searchPhrase} type="text" placeholder="Search by order id/name/ emai/ phone"
                             onChange={search} />
-                    </div>
+                    </div> */}
 
-                    <div className="filter-order-status">
+                    {/* <div className="filter-order-status">
                         <span>Status: </span>
                         <select name="status" value={status} onChange={handleStatus}>
-                            <option value="">All orders</option>
 
-                            <option value="status=Pending">
-                                Pending
-                            </option>
-
-                            <option value="status=Processing">
-                                Processing
-                            </option>
-
-                            <option value="status=Packaged">
-                                Packaged
-                            </option>
-
-                            <option value="status=Waiting for pickup">
-                                Delivering to the carrier
-                            </option>
-
-                            <option value="status=Picking up">
-                                Picking up
-                            </option>
-
-                            <option value="status=Picked up">
-                                Picked up
-                            </option>
-
-                            <option value="status=On Delivery">
-                                On Delivery
-                            </option>
-
-                            <option value="status=Delivered">
-                                Delivered
-                            </option>
-
-                            <option value="status=Completed">
-                                Completed
-                            </option>
-
-                            <option value="status=Cancel">
-                                Cancel
+                            <option value="status=Shipping">
+                                Shipping
                             </option>
 
                         </select>
-                    </div>
+                    </div> */}
 
-                    <div className="sort-order-by">
+                    {/* <div className="sort-order-by">
                         <span>Sort by: </span>
                         <select value={sort} onChange={e => setSort(e.target.value)}>
                             <option value="">Newest</option>
                             <option value="sort=oldest">Oldest</option>
                         </select>
-                    </div>
+                    </div> */}
                 </div>
                 <div className="orders-list">
                     <table className="orders-list-table">
@@ -164,11 +125,11 @@ function ListOrders() {
                                             </span>}
                                         </td>
                                         <td>${order.total}</td>
-                                        <td>{order.status}</td>
+                                        <td>Pending Approval</td>
                                         <td>
                                             <div className="order-actions">
                                                 <div className="edit-order">
-                                                    <Link to={`/listorders/${order._id}`} >
+                                                    <Link to={`/ordersonship/${order._id}`} >
                                                         <FaIcons.FaEdit style={{ color: '#9e9e9e' }} />
                                                     </Link>
                                                 </div>
@@ -198,4 +159,4 @@ function ListOrders() {
     )
 }
 
-export default ListOrders
+export default OrdersOnShip

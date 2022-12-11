@@ -810,6 +810,31 @@ const userCtrl = {
             return res.status(500).json({ msg: err.message })
         }
     },
+    addShipper: async (req, res) => {
+      try {
+          const { username, email, password } = req.body;
+          if (!ValidateEmail(email)) return res.status(400).json({ msg: "You have entered an invalid email address!" })
+          const user = await Users.findOne({ email })
+          if (user) return res.status(400).json({ msg: "The email already exists." })
+
+          if (password.length < 6)
+              return res.status(400).json({ msg: 'Password is at least 6 characters long.' })
+
+          //Password Encrypt
+          const passwordHash = await bcrypt.hash(password, 10)
+
+          const newUser = new Users({
+              username, email, password: passwordHash, role: 2
+          })
+
+          //save to database
+          await newUser.save()
+
+          return res.json({ msg: "New Shipper is created." })
+      } catch (err) {
+          return res.status(500).json({ msg: err.message })
+      }
+    },
     verifySmsPhone: async (req, res) => {
         try {
             const { phone } = req.body
@@ -846,7 +871,18 @@ const userCtrl = {
         } catch (err) {
             return res.status(500).json({ msg: err.message })
         }
-    }
+    },
+    myOrdersShipper: async (req, res) => {
+      try {
+          const features = new APIfeatures(Payments.find({ shipper_id: req.user.id }), req.query).filtering().sorting()
+          const myorders= await features.query
+          // const history = await Payments.find({user_id: req.user.id})
+
+          res.json(myorders)
+      } catch (err) {
+          return res.status(500).json({ msg: err.message })
+      }
+  }
 }
 const ValidateEmail = (email) => {
     const mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;

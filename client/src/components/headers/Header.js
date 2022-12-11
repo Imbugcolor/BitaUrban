@@ -14,6 +14,7 @@ function Header() {
     const state = useContext(GlobalState)
     const [isLogged] = state.userAPI.isLogged
     const [isAdmin] = state.userAPI.isAdmin
+    const [isShipper] = state.userAPI.isShipper
     const [user] = state.userAPI.user
     const [cart] = state.userAPI.cart
 
@@ -101,7 +102,7 @@ function Header() {
             </>
         )
     }
-    if (isAdmin) return null;
+    if (isAdmin || isShipper) return null;
     return (
         <header>
             <div className="logo">

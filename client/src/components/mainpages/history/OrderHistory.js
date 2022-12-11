@@ -81,12 +81,28 @@ function OrderHistory() {
                         <option value="status=Pending">
                             Đang chờ
                         </option>
-                        
+
                         <option value="status=Processing">
                             Đang xử lý
                         </option>
 
-                        <option value="status=Shipping">
+                        <option value="status=Packaged">
+                            Đã đóng gói
+                        </option>
+
+                        <option value="status=Waiting for pickup">
+                            Đang giao cho phía vận chuyển
+                        </option>
+
+                        <option value="status=Picking up">
+                            Đang lấy hàng
+                        </option>
+
+                        <option value="status=Picked up">
+                            Đã lấy hàng
+                        </option>
+
+                        <option value="status=On Delivery">
                             Đang giao hàng
                         </option>
 
@@ -94,8 +110,12 @@ function OrderHistory() {
                             Đã giao hàng
                         </option>
 
+                        <option value="status=Completed">
+                            Đã hoàn thành
+                        </option>
+
                         <option value="status=Cancel">
-                            Đơn bị hủy
+                            Đã hủy
                         </option>
                         
                     </select>
