@@ -134,7 +134,7 @@
 }
 
 /* Change phone order modal css */
-.order-phone-change-box {
+.order-phone-change-box, .detail-delivery-box {
     display: none;
     width: 100%;
     position: fixed;
@@ -145,7 +145,7 @@
     background: rgba(0, 0, 0, 0.4);
 }
 
-.order-phone-change-box.active {
+.order-phone-change-box.active, .detail-delivery-box.active {
     display: block;
 }
 
@@ -189,10 +189,78 @@
     font-weight: 700;
 }
 
+.view-delivery-order-btn {
+    text-align: center;
+    background: #00c8ff;
+    border: 1px solid #00c8ff;
+    height: 35px;
+    padding: 0 10px;
+    text-transform: uppercase;
+    font-weight: 700;
+    transition: .2s ease-in-out;
+}
+.view-delivery-order-btn:hover {
+    background: white;
+    color: #00c8ff;
+}
+
 .disabled-btn {
     opacity: 0.6;
     cursor: auto;
     background-color: #d5d6d7;
     color: #000;
+}
+
+.btns-wrapper {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.btns-wrapper .return-order-btn, .return-order-disabled-btn {
+    border: 1px solid orange;
+    background: orange;
+    margin-right: 10px;
+}
+
+.btns-wrapper .cancel-order-btn, .cancel-order-disabled-btn {
+    background: crimson;
+    border: 1px solid crimson;
+
+}
+
+.btns-wrapper .return-order-btn, .return-order-disabled-btn,
+.btns-wrapper .cancel-order-btn, .cancel-order-disabled-btn {
+    height: 35px;
+    padding: 0 10px;
+    text-transform: uppercase;
+    font-weight: 700;
+    transition: .2s ease-in-out;
+}
+
+.btns-wrapper .return-order-btn:hover,
+.btns-wrapper .cancel-order-btn:hover {
+    background: white;
+}
+
+.btns-wrapper .return-order-btn:hover {
+    color: orange;
+}
+
+.btns-wrapper .cancel-order-btn:hover {
+    color: crimson;
+}
+
+
+.check-shipping-fee-btn {
+    cursor: pointer;
+    color: blue;
+    font-weight: 500;
+}
+
+.note-detail-order .shipper-note {
+    display: flex;
+    align-items: center;
 }
 @import url('../utils/modal/ChangePhoneModal.css');

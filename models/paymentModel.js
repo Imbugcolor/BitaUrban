@@ -43,10 +43,15 @@ const paymentSchema = new mongoose.Schema({
         type: String,
         default: 'Pending'
     },
-    shipper_id: { 
+    order_delivery_code: {
         type: String,
         require: true,
         default: ''
+    },
+    shipping_fee: {
+        type: Number,
+        require: true,
+        default: 0
     }
 },{
     timestamps: true

@@ -81,6 +81,8 @@ const productsCtrl = {
             const {product_id, title, description, content, price, images, color, size, category, countInStock} = req.body;
             if(!images) 
                 return res.status(400).json({msg: 'No Image uploaded'})
+            if(!category)
+                return res.status(400).json({msg: 'Category is required!'})
             const product = await Products.findOne({product_id})
             if(product) 
                 return res.status(400).json({msg: 'ID product already exists.'})

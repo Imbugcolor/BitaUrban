@@ -90,7 +90,7 @@ function OrderHistory() {
                             Đã đóng gói
                         </option>
 
-                        <option value="status=Waiting for pickup">
+                        <option value="status=Delivering to the carrier">
                             Đang giao cho phía vận chuyển
                         </option>
 

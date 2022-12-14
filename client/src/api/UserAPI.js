@@ -5,18 +5,15 @@ import { toast } from 'react-toastify';
 function UserAPI(token) {
     const [isLogged, setIsLogged] = useState(false)
     const [isAdmin, setIsAdmin] = useState(false)
-    const [isShipper, setIsShipper] = useState(false)
     const [cart, setCart] = useState([])
     const [history, setHistory] = useState([])
-    const [shipperorders, setShipperOrders] = useState([])
     const [user, setUser] = useState([])
     const [callback, setCallback] = useState(false)
     const [allUser, setAllUser] = useState([])
     const [allUserCopy, setAllUserCopy] = useState([])
     const [allStaff, setAllStaff] = useState([])
     const [allStaffCopy, setAllStaffCopy] = useState([])
-    const [allShipper, setAllShipper] = useState([])
-    const [allShipperCopy, setAllShipperCopy] = useState([])
+
 
     useEffect(() => {
         if (token) {
@@ -28,7 +25,6 @@ function UserAPI(token) {
 
                     setIsLogged(true)
                     res.data.role === 1 ? setIsAdmin(true) : setIsAdmin(false)
-                    res.data.role === 2 ? setIsShipper(true) : setIsShipper(false)
                     setUser(res.data)
                     setCart(res.data.cart)
 
@@ -64,20 +60,6 @@ function UserAPI(token) {
                         }
                         getAllStaff()
 
-                        const getAllShipper = async () => {
-                            try {
-                                const res = await axios.get('/user/alluser?role=2', {
-                                    headers: { Authorization: token }
-                                })
-
-                                setAllShipper(res.data)
-                                setAllShipperCopy(res.data)
-
-                            } catch (err) {
-                                alert(err.response.data.msg)
-                            }
-                        }
-                        getAllShipper()
                      }
                 } catch (err) {
                     alert(err.response.data.msg)
@@ -148,19 +130,15 @@ function UserAPI(token) {
     return {
         isLogged: [isLogged, setIsLogged],
         isAdmin: [isAdmin, setIsAdmin],
-        isShipper: [isShipper, setIsShipper],
         callback: [callback, setCallback],
         cart: [cart, setCart],
         addCart: addCart,
         history: [history, setHistory],
-        shipperorders: [shipperorders, setShipperOrders],
         user: [user, setUser],
         allUser: [allUser, setAllUser],
         allUserCopy: [allUserCopy, setAllUserCopy],
         allStaff: [allStaff, setAllStaff],
         allStaffCopy: [allStaffCopy, setAllStaffCopy],
-        allShipper: [allShipper, setAllShipper],
-        allShipperCopy: [allShipperCopy, setAllShipperCopy]
     }
 }
 

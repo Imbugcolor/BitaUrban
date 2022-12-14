@@ -12,17 +12,40 @@ function OrderDetails() {
     const [history] = state.userAPI.history
     const [token] = state.token
     const [orderDetails, setOrderDetails] = useState([])
-
-
+    const [statusOrderDelivery, setStatusOrderDelivery] = useState('')
+    const [orderDeliveryCode, setOrderDeliveryCode] = useState('')
     const params = useParams()
     useEffect(() => {
         if (params.id) {
             history.forEach(item => {
                 if (item._id === params.id) setOrderDetails(item)
+                
             })
         }
     }, [params.id, history])
 
+    const getStatusDelivery = async () => {
+        try {
+            const res = await axios.post('https://dev-online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/detail-by-client-code', {
+                "client_order_code": orderDetails._id
+            },
+                {
+                    headers: {
+                        Token: 'a0c50773-7931-11ed-a83f-5a63c54f968d',
+                        ShopId: '120981'
+                    }
+                })
+            console.log(res)
+            setStatusOrderDelivery(res.data.data.status)
+            setOrderDeliveryCode(res.data.data.order_code)
+        } catch (err) {
+            toast.error(err.response.data.message)
+        }
+    }
+
+    if(orderDetails.status === 'Delivering to the carrier'){
+        getStatusDelivery()
+    }
     const handleCancelOrder = async () => {
         if (window.confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?')) {
             try {
@@ -69,6 +92,9 @@ function OrderDetails() {
                         </div>
                         <div className="infor status">
                             <span>Trạng thái: {orderDetails.status}</span>
+                            {
+                                orderDetails.status === 'Delivering to the carrier' ? <span>/Shipper: {statusOrderDelivery?.replace(/_/g, ' ')} <a target="_blank" href={`https://tracking.ghn.dev/?order_code=${orderDeliveryCode}`} >Tracking</a></span> : null
+                            }
                             <span>Phương thức thanh toán: {orderDetails.method}</span>
                         </div>
                     </div>

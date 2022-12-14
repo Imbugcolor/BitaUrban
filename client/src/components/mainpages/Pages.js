@@ -30,27 +30,20 @@ import Resetpassword from './auth/resetpassword'
 import ListOrders from './listorders/ListOrders'
 import DetailOrderAdmin from './listorders/DetailOrderAdmin'
 
-import OrdersOnShip from './ordersShipper/OrdersOnShip'
-import DetailOrderOnShip from './ordersShipper/DetailOrderOnShip'
-import MyOrders from './ordersShipper/MyOrders'
-import MyDetailOrders from './ordersShipper/MyDetailOrders'
-import Shipper from './overview/Shipper'
+
 
 import AddStaff from './overview/AddStaff'
-import AddShipper from './overview/AddShipper'
-import Statistic from './ordersShipper/Statistic'
+
 function Pages() {
     const state = useContext(GlobalState)
     const [isLogged] = state.userAPI.isLogged
     const [isAdmin] = state.userAPI.isAdmin
-    const [isShipper] = state.userAPI.isShipper
-
 
     return (
         <>
             <ScrollToTop />
             <Switch>
-                <Route path="/" exact component={isAdmin ? Chart : Home && isShipper ? Statistic : Home} />             
+                <Route path="/" exact component={isAdmin ? Chart : Home} />             
                 <Route path="/products" exact component={Products} />
                 <Route path="/pages/:pageName" exact component={About} />
                 <Route path="/pages/termOfService" exact component={TermOfService} />
@@ -82,14 +75,6 @@ function Pages() {
 
                 <Route path="/cart" exact component={isLogged ? Cart : NotFound} />
                 <Route path="/cart/payment" exact component={isLogged ? Payment : NotFound} />
-
-                <Route path="/statistic" exact component={isShipper ? Statistic : NotFound} />
-                <Route path="/ordersonship" exact component={isShipper ? OrdersOnShip : NotFound} />
-                <Route path="/ordersonship/:id" exact component={isShipper ? DetailOrderOnShip : NotFound} />
-                <Route path="/myorders" exact component={isShipper ? MyOrders : NotFound} />
-                <Route path="/myorders/:id" exact component={isShipper ? MyDetailOrders : NotFound} />
-                <Route path="/shipper" exact component={isAdmin ? Shipper : NotFound} />
-                <Route path="/shipper/addshipper" exact component={isAdmin ? AddShipper : NotFound} />
 
                 <Route path="*" exact component={NotFound} />
             </Switch>

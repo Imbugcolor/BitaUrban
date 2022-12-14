@@ -222,57 +222,20 @@ const paymentCtrl = {
             return res.status(500).json({msg: err.message})
         }
     },
-    acceptOrdersShipper: async (req, res) => {
-       try {
-            const payment = await Payments.findById(req.params.id)
-            if(payment.status !== 'Delivering to the carrier') {
-                return res.status(400).json({msg: 'This order is not available'})
-            }
-            const user = await Users.findById(req.user.id).select('name email')
-            const { status } = req.body
-            const { _id } = user
-
-            await Payments.findOneAndUpdate({_id: req.params.id}, {
-                shipper_id: _id, status
-            })
-
-            return res.json({msg: "Order is accepted."})
-       } catch (err) {
-            return res.status(500).json({msg: err.message})
-       }
-    },
-    cancelOrdersShipper: async (req, res) => {
+    deliveryToGHN: async (req, res) => {
         try {
-            const payment = await Payments.findById(req.params.id)
-            if(payment.status === 'Delivered') {
-                return res.status(400).json({msg: 'This order is delivered'})
-            }
-             const { status }  = req.body
-             const shipper_id = ''
- 
-             await Payments.findOneAndUpdate({_id: req.params.id}, {
-                 shipper_id, status
-             })
- 
-             return res.json({msg: "Order is cancelled."})
-        } catch (err) {
-             return res.status(500).json({msg: err.message})
-        }
-     },
-     updateStatusShipOrder: async (req, res) => {
-        try {
-            const { status } = req.body
+            const { status, order_delivery_code, shipping_fee } = req.body
             
             await Payments.findOneAndUpdate({_id: req.params.id}, {
-                status
+                status, order_delivery_code, shipping_fee
             })
 
-            return res.json({msg: "Order status is updated."})
+            return res.json({msg: "Delivery To Carrier Success."})
             
         } catch (err) {
             return res.status(500).json({msg: err.message})
         }
-    },
+    }
 }
 
 const sold = async(id, quantity) => {

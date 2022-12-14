@@ -21,11 +21,6 @@ export const SidebarData = [
         icon: <FaIcons.FaUserShield />
     },
     {
-        title: 'Shipper',
-        path: '/shipper',
-        icon: <FaIcons.FaShippingFast />
-    },
-    {
         title: 'Products list',
         path: '/products_list',
         icon: <GiIcons.GiClothes />

@@ -79,7 +79,7 @@ function ListOrders() {
                                 Packaged
                             </option>
 
-                            <option value="status=Waiting for pickup">
+                            <option value="status=Delivering to the carrier">
                                 Delivering to the carrier
                             </option>
 

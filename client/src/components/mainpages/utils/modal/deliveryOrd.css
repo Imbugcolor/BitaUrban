@@ -1,0 +1,62 @@
+.delivery-order-detail {
+    background: #fff;
+    padding: 30px;
+    position: relative;
+    width: 80%;
+    border-radius: 10px;
+}
+
+.delivery-order-detail-wrapper {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.delivery-order-detail-wrapper .infor-order_title {
+    background: #f1f1f1;
+    padding: 5px 5px;
+    border-radius: 3px;
+    text-transform: uppercase;
+}
+
+.delivery-order-detail-wrapper .table-row {
+    display: flex;
+    padding: 0 5px;
+    margin: 5px 0;
+}
+
+.delivery-order-detail-wrapper .table-row .label{
+    width: 40%;
+}
+
+.delivery-order-detail-wrapper .table-row .value{
+    width: 60%;
+    word-break: break-word;
+    font-weight: 500;
+}
+
+.delivery-order-detail-wrapper .infor-order .value.status {
+    color: #fff;
+    display: inline-block;
+    padding: 5px;
+    background: #00467f;
+    border-radius: 4px;
+    line-height: 16px;
+    font-size: 12px;
+    text-transform: capitalize;
+    width: fit-content;
+}
+
+.delivery-order-detail .btn-tracking {
+    margin-left: auto;
+}
+
+.delivery-order-detail .btn-tracking a{
+    display: block;
+    background: green;
+    width: fit-content;
+    color: white;
+    padding: 5px;
+    border-radius: 3px;
+    margin-left: auto;
+}
