@@ -8,7 +8,6 @@ import { FaEdit } from 'react-icons/fa'
 import ChangePhoneModal from '../utils/modal/ChangePhoneModal'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSpinner } from '@fortawesome/free-solid-svg-icons'
-import DetailDeliveryOrdModal from '../utils/modal/DetailDeliveryOrdModal'
 import moment from 'moment'
 
 const initOrderDelivery = {
@@ -491,10 +490,7 @@ function DetailOrderAdmin() {
                 </div>
                 <div className="order-phone-change-box">
                     {currentPhone && <ChangePhoneModal phoneOrder={currentPhone} callback={callback} setCallback={setCallback} token={token} />}
-                </div>
-                <div className="detail-delivery-box">
-                    {currentOrder && <DetailDeliveryOrdModal order={detailOrder} callback={callback} setCallback={setCallback} token={token} />}
-                </div>
+                </div>         
             </div>
         </div>
     )
