@@ -12,7 +12,7 @@ function QuickViewProduct({ detailProduct }) {
     const state = useContext(GlobalState)
     const addCart = state.userAPI.addCart
     const [categories] = state.categoriesAPI.categories
-    
+
     const [slideIndex, setSlideIndex] = useState(1)
     const [width, setWidth] = useState(0)
     const [start, setStart] = useState(0)
@@ -102,17 +102,19 @@ function QuickViewProduct({ detailProduct }) {
         <div className="view-detail-product-modal quickview">
             <section className="product-details">
                 <div className="product-page-img">
-                    {
-                        detailProduct.images.map((image, index) => (
-                            <div key={image.public_id} className="mySlides"
-                                style={{ display: (index + 1) === slideIndex ? "block" : "none" }}>
-                                <div className="numbertext">{index + 1} / {detailProduct.images.length}</div>
-                                <img src={image.url} alt="" />
-                            </div>
-                        ))
-                    }
-                    <a href="#!" className="prev" onClick={() => plusSlides(-1)}>&#10094;</a>
-                    <a href="#!" className="next" onClick={() => plusSlides(+1)}>&#10095;</a>
+                    <div className="big-img">
+                        {
+                            detailProduct.images.map((image, index) => (
+                                <div key={image.public_id} className="mySlides"
+                                    style={{ display: (index + 1) === slideIndex ? "block" : "none" }}>
+                                    <div className="numbertext">{index + 1} / {detailProduct.images.length}</div>
+                                    <img src={image.url} alt="" />
+                                </div>
+                            ))
+                        }
+                        <a href="#!" className="prev" onClick={() => plusSlides(-1)}>&#10094;</a>
+                        <a href="#!" className="next" onClick={() => plusSlides(+1)}>&#10095;</a>
+                    </div>
 
                     <div className="slider-img" draggable={true} ref={slideRef}
                         onDragStart={dragStart}
