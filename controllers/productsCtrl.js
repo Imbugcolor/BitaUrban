@@ -80,9 +80,18 @@ const productsCtrl = {
         try {
             const {product_id, title, description, content, price, images, color, size, category, countInStock} = req.body;
             if(!images) 
-                return res.status(400).json({msg: 'No Image uploaded'})
+                return res.status(400).json({msg: 'No Image uploaded!'})
             if(!category)
                 return res.status(400).json({msg: 'Category is required!'})
+            if(price < 0)
+                return res.status(400).json({msg: 'Price must be greater than 0!'})
+            if(countInStock < 0)
+                return res.status(400).json({msg: 'In stock must be greater than 0!'})
+          
+            const inStock = new Number(countInStock)
+            
+            if(!Number.isInteger(inStock.valueOf()))
+                return res.status(400).json({msg: 'In stock value is not valid!'})
             const product = await Products.findOne({product_id})
             if(product) 
                 return res.status(400).json({msg: 'ID product already exists.'})
@@ -109,7 +118,17 @@ const productsCtrl = {
             const {title, description, content, price, images, color, size, category, countInStock} = req.body;
             if(!images)
                 return res.status(400).json({msg: 'No Image uploaded'})
-
+            if(!category)
+                return res.status(400).json({msg: 'Category is required!'})
+            if(price < 0)
+                return res.status(400).json({msg: 'Price must be greater than 0!'})
+            if(countInStock < 0)
+                return res.status(400).json({msg: 'In stock must be greater than 0!'})
+          
+            const inStock = new Number(countInStock)
+            
+            if(!Number.isInteger(inStock.valueOf()))
+                return res.status(400).json({msg: 'In stock value is not valid!'})
             await Products.findOneAndUpdate({_id: req.params.id},{
                 title: title.toLowerCase(), description, content, price, images, size, colors: color, category, countInStock
             })
@@ -127,7 +146,7 @@ const productsCtrl = {
             const user = await Users.findById(req.user.id);
             const userName = user.username
             const imageProfile = user.imageProfile
-            const history = await Payments.find({$and: [{user_id: req.user.id},{status: 'Delivered'}]})
+            const history = await Payments.find({$and: [{user_id: req.user.id},{status: 'Completed'}]})
 
             const cartsArray = history.map(item => {return item.cart})
             var productsArray = cartsArray.flat()
