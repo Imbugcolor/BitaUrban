@@ -11,7 +11,7 @@
 
 .product-page-img {
     width: 100%;
-    height: fit-content;
+    height: min-content;
     border: 1px solid #eee;
     padding: 5px;
     overflow: hidden;
