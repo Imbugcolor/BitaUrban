@@ -22,6 +22,10 @@
     max-width: 100%;
 }
 
+.footer .footer-logo ul {
+    word-break: break-word;
+}
+
 .footer .footer-logo li {
     display: flex;
     align-items: center;   
