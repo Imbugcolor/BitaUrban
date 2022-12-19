@@ -11,12 +11,33 @@ function Login() {
     email: '',
     password: ''
   })
+  const [validateMsg, setValidateMsg] = useState('')
 
   useEffect(() => {
     gapi.load("client:auth2", () => {
       gapi.auth2.init({ clientId: clientId })
     })
   }, [])
+
+  const validate = () => {
+    const msg = {}
+  
+    if(!user.email) {
+      msg.email = '*Bạn chưa nhập email'
+    } else if (!user.email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)) {
+      msg.email = '*Email không hợp lệ'
+    }
+
+    if(!user.password) {
+      msg.password = '*Bạn chưa nhập mật khẩu'
+    } else if (user.password.length < 6) {
+      msg.password = '*Mật khẩu phải có độ dài tối thiểu 6 ký tự'
+    }
+    
+    setValidateMsg(msg)
+    if(Object.keys(msg).length > 0) return false
+    return true
+  }
 
   const onChangeInput = (e) => {
     const { name, value } = e.target
@@ -25,6 +46,8 @@ function Login() {
 
   const loginSubmit = async (e) => {
     e.preventDefault()
+    const isValid = validate()
+    if(!isValid) return
     try {
       await axios.post('/user/login', { ...user })
 
@@ -65,19 +88,19 @@ function Login() {
       <form onSubmit={loginSubmit} className="form-signin-signout">
         <h2>Đăng nhập</h2>
         <label>Email</label>
-        <input type="email" name="email"
+        <input type="text" name="email"
           value={user.email}
           onChange={onChangeInput}
-          required
         />
+        <span style={{color: 'red'}}>{validateMsg.email}</span>
 
         <label>Mật khẩu</label>
         <input type="password" name="password"
           value={user.password}
           autoComplete="on"
           onChange={onChangeInput}
-          required
         />
+        <span style={{color: 'red'}}>{validateMsg.password}</span>
 
         <div className="row">
           <button type="submit">Đăng nhập</button>

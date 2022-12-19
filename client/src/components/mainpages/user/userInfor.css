@@ -193,6 +193,10 @@
     display: block;
 }
 
+.validate-phone-msg {
+    color: #4c4747;
+    margin-left: 45px;
+}
 
 
 @import url('../utils/modal/ChangePhoneModal.css');

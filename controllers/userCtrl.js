@@ -54,7 +54,14 @@ const userCtrl = {
             if (user) return res.status(400).json({ msg: "Email này đã được đăng ký" })
 
             if (password.length < 6)
-                return res.status(400).json({ msg: 'Mật khẩu tổi thiểu 6 ký tự' })
+                return res.status(400).json({ msg: 'Mật khẩu phải tổi thiểu 6 ký tự' })
+            
+            if (password.match(/^(?=.*\s)/))
+                return res.status(400).json({ msg: 'Mật khẩu không được chứa khoảng cách' })
+
+            if (!ValidatePassword(password)) 
+                return res.status(400).json({ msg: "Mật khẩu phải chứa ít nhất 1 chữ cái in hoa, 1 chữ cái thường và một chữ số" })
+
             if (password !== verify_password)
                 return res.status(400).json({ msg: 'Xác nhận mật khẩu chưa đúng' })
 
@@ -87,14 +94,17 @@ const userCtrl = {
     login: async (req, res) => {
         try {
             const { email, password } = req.body;
-
+            if (!ValidateEmail(email)) return res.status(400).json({ msg: "Email không hợp lệ" })
             const user = await Users.findOne({ email })
-            if (!user) return res.status(400).json({ msg: "User does not exist." })
+            if (!user) return res.status(400).json({ msg: "Tài khoản không tồn tại" })
 
-            if (!user.status) return res.status(400).json({ msg: "This account has been locked." })
+            if (password.length < 6)
+            return res.status(400).json({ msg: 'Mật khẩu phải tối thiểu 6 ký tự' })
+
+            if (!user.status) return res.status(400).json({ msg: "Tài khoản của bạn đã tạm thời bị khóa trên hệ thống" })
 
             const isMatch = await bcrypt.compare(password, user.password)
-            if (!isMatch) return res.status(400).json({ msg: "Incorrect Password." })
+            if (!isMatch) return res.status(400).json({ msg: "Sai mật khẩu" })
 
             //If login success, create access token and refresh token
             const accesstoken = createAccessToken({ id: user._id })
@@ -277,6 +287,10 @@ const userCtrl = {
                 return res.status(400).json({ msg: "Mật khẩu mới không được trùng với mật khẩu hiện tại" })
             if (newPassword.length < 6)
                 return res.status(400).json({ msg: 'Mật khẩu có ít nhất 6 ký tự' })
+            if (newPassword.match(/^(?=.*\s)/))
+                return res.status(400).json({ msg: 'Mật khẩu không được chứa khoảng cách' })
+            if (!ValidatePassword(newPassword)) 
+                return res.status(400).json({ msg: "Mật khẩu phải chứa ít nhất 1 chữ cái in hoa, 1 chữ cái thường và một chữ số" })
             if (newPassword !== verifyPassword)
                 return res.status(400).json({ msg: 'Xác nhận mật khẩu chưa đúng' })
             //Password Encrypt
@@ -760,7 +774,12 @@ const userCtrl = {
             const secret = process.env.CHANGE_PASSWORD_SECRET + oldUser.password
             try {
                 jwt.verify(token, secret)
-                if (password.length < 6) return res.status(400).json({ msg: 'Password is at least 6 characters long.' })
+                if (password.length < 6) 
+                    return res.status(400).json({ msg: 'Mật khẩu phải có độ dài ít nhất 6 ký tự.' })
+                if (password.match(/^(?=.*\s)/))
+                    return res.status(400).json({ msg: 'Mật khẩu không được chứa khoảng cách' })
+                if (!ValidatePassword(password)) 
+                    return res.status(400).json({ msg: "Mật khẩu phải chứa ít nhất 1 chữ cái in hoa, 1 chữ cái thường và 1 chữ số" })
                 const hashPassword = await bcrypt.hash(password, 10)
                 await Users.findOneAndUpdate({ _id: id }, {
                     password: hashPassword
@@ -793,8 +812,11 @@ const userCtrl = {
             if (user) return res.status(400).json({ msg: "The email already exists." })
 
             if (password.length < 6)
-                return res.status(400).json({ msg: 'Password is at least 6 characters long.' })
-
+                return res.status(400).json({ msg: 'Mật khẩu phải có độ dài ít nhất 6 ký tự.' })
+            if (password.match(/^(?=.*\s)/))
+                return res.status(400).json({ msg: 'Mật khẩu không được chứa khoảng cách' })
+            if (!ValidatePassword(password)) 
+                return res.status(400).json({ msg: "Mật khẩu phải chứa ít nhất 1 chữ cái in hoa, 1 chữ cái thường và một chữ số" })
             //Password Encrypt
             const passwordHash = await bcrypt.hash(password, 10)
 
@@ -855,6 +877,15 @@ const ValidateEmail = (email) => {
     }
     else {
         return false;
+    }
+}
+const ValidatePassword = (password) => {
+    const passRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/;
+    if (password.match(passRegex)) {
+      return true;
+    }
+    else {
+      return false;
     }
 }
 const createAccessToken = (user) => {

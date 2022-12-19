@@ -10,11 +10,23 @@ function UpdatePhoneForUser() {
     const [user] = state.userAPI.user
     const [callback, setCallback] = state.userAPI.callback
     const [phone, setPhone] = useState('')
-
+    const [validatePhoneMsg, setValidatePhoneMsg] = useState('')
 
     useEffect(() => {
         setPhone(user.phone ?? '')
     }, [user])
+
+    const validatePhone = () => {
+        const msg = {}
+        if(!phone) {
+            msg.phone = '*Bạn chưa nhập số điện thoại'
+        } else if (phone.length !== 9) {
+            msg.phone = '*Số điện thoại không hợp lệ'
+        }
+        setValidatePhoneMsg(msg)
+        if(Object.keys(msg).length > 0) return false
+        return true
+    }
 
     const handleCloseView = (e) => {
         e.preventDefault()
@@ -23,6 +35,8 @@ function UpdatePhoneForUser() {
     }
     
     const handleSaveChangePhone = async (e) => {
+        const isValid = validatePhone()
+        if(!isValid) return
         try {
 
             await axios.patch(`/user/updatephone/`, { phone }, {
@@ -50,7 +64,10 @@ function UpdatePhoneForUser() {
                     <label>Phone number:</label>
                     <div className='phone-number-profile-input'>
                         <span>+84</span>
-                        <input value={phone} maxLength="9" onChange={(e) => setPhone(e.target.value)}/>
+                        <input type="number" value={phone} onChange={(e) => setPhone(e.target.value)}/>                     
+                    </div>
+                    <div className='validate-phone-msg'>
+                        <span>{validatePhoneMsg.phone}</span>
                     </div>
                 </div>
             </div>

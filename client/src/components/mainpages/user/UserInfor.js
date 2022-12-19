@@ -33,6 +33,7 @@ function UserInfor() {
     const addressRef = useRef()
 
     const [avtChange, setAvtChange] = useState(false)
+    const [validatePasswordMsg, setValidatePasswordMsg] = useState('')
 
     useEffect(() => {
         setAvt(user.imageProfile?.url ?? Unknow)
@@ -90,7 +91,37 @@ function UserInfor() {
         addressRef.current.classList.add('active')
     }
 
+    const validate = () => {
+        const msg = {}
+        if(!currentPassword) {
+            msg.current = "*Chưa nhập mật khẩu hiện tại "
+        }
+
+        if(!newPassword) {
+            msg.new = "*Chưa nhập mật khẩu mới"
+        } else if (newPassword === currentPassword) {
+            msg.new = "*Không được trùng với mật khẩu hiện tại"
+        } else if (newPassword.length < 6) {
+            msg.new = '*Mật khẩu phải có độ dài tối thiểu 6 ký tự'
+        } else if (newPassword.match(/^(?=.*\s)/)) {
+            msg.new = '*Mật khẩu không được chứa khoảng cách'
+        } else if (!newPassword.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/)) {
+            msg.new = '*Mật khẩu phải chứa chữ cái in hoa, chữ cái thường và chữ số'
+        }
+
+        if(!verifyPassword) {
+            msg.verify = "*Xác nhận mật khẩu là bắt buộc"
+        } else if (verifyPassword !== newPassword) {
+            msg.verify = "*Xác nhận mật khẩu không chính xác"
+        }
+        
+        setValidatePasswordMsg(msg)
+        if(Object.keys(msg).length > 0) return false
+        return true
+    }
     async function handleChangePassword(e) {
+        const isValid = validate()
+        if(!isValid) return
         try {
             const res = await axios.patch('/user/changepassword', {
                 oldPassword: currentPassword,
@@ -272,16 +303,19 @@ function UserInfor() {
                                         <label htmlFor="user-current-password">Mật khẩu hiện tại</label>
                                         <input type="password" id="user-current-password"
                                             value={currentPassword} onChange={e => setCurrentPassword(e.target.value)} />
+                                        <span style={{color: 'red', fontSize: '13px'}}>{validatePasswordMsg.current}</span>
                                     </div>
                                     <div className="password-input-item">
                                         <label htmlFor="user-new-password">Mật khẩu mới</label>
                                         <input type="password" id="user-new-password"
                                             value={newPassword} onChange={e => setNewPassword(e.target.value)} />
+                                        <span style={{color: 'red', fontSize: '13px'}}>{validatePasswordMsg.new}</span>
                                     </div>
                                     <div className="password-input-item">
                                         <label htmlFor="user-verify-password">Xác nhận mật khẩu</label>
                                         <input type="password" id="user-verify-password"
                                             value={verifyPassword} onChange={e => setVerifyPassword(e.target.value)} />
+                                        <span style={{color: 'red', fontSize: '13px'}}>{validatePasswordMsg.verify}</span>
                                     </div>
                                     <button className="change-password-btn"
                                         onClick={handleChangePassword}
