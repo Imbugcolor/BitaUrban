@@ -5,14 +5,29 @@ import { toast } from 'react-toastify'
 
 function ChangePhoneModal({ phoneOrder, callback, setCallback, token }) {
     const [newPhone, setNewPhone] = useState(phoneOrder.phone)
+    const [validatePhoneMsg, setValidatePhoneMsg] = useState('')
 
     const handleCloseView = (e) => {
         e.preventDefault()
         const viewbox = document.querySelector('.order-phone-change-box')
         viewbox.classList.remove('active')
     }
-    
+
+    const validatePhone = () => {
+        const msg = {}
+        if(!newPhone) {
+            msg.phone = '*Bạn chưa nhập số điện thoại'
+        } else if (newPhone.length !== 9) {
+            msg.phone = '*Số điện thoại không hợp lệ'
+        }
+        setValidatePhoneMsg(msg)
+        if(Object.keys(msg).length > 0) return false
+        return true
+    }
+
     const handleSaveChangePhone = async (e) => {
+        const isValid = validatePhone()
+        if(!isValid) return
         try {
 
             await axios.patch(`/api/payment/changephonenumber/${phoneOrder._id}`, { newPhone }, {
@@ -32,13 +47,20 @@ function ChangePhoneModal({ phoneOrder, callback, setCallback, token }) {
             toast.error(err.respone.data.msg)
         }
     }
+
     return (
     <div className="phone-change-modal">
          <section className="form-change-phone">
             <div className='form-change-phone-wrapper'>
                 <div className='change-phone-number-field'>
                     <label>Phone number:</label>
-                    <input value={newPhone} onChange={(e) => setNewPhone(e.target.value)}/>
+                    <div className='phone-number-profile-input'>
+                        <span>+84</span>
+                        <input type="number" value={newPhone} onChange={(e) => setNewPhone(e.target.value)}/>                  
+                    </div>         
+                </div>
+                <div className='validate-phone-msg'>
+                    <span>{validatePhoneMsg.phone}</span>
                 </div>
             </div>
             <div className="phone-close" onClick={handleCloseView}>

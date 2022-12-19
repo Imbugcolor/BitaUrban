@@ -5,6 +5,7 @@ import { GlobalState } from '../../../GlobalState'
 import { toast } from 'react-toastify'
 import LocationForm from '../utils/address/LocationForm'
 import { FaEdit } from 'react-icons/fa'
+import { TbZoomMoney } from 'react-icons/tb'
 import ChangePhoneModal from '../utils/modal/ChangePhoneModal'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSpinner } from '@fortawesome/free-solid-svg-icons'
@@ -37,6 +38,7 @@ function DetailOrderAdmin() {
     const [currentOrder, setCurrentOrder] = useState(false)
     const [orderDelivery, setOrderDelivery] = useState(initOrderDelivery)
     const [shipFee, setShipFee] = useState(0)
+    const [validateMsg, setValidateMsg] = useState('')
 
     useEffect(() => {
         if (params.id) {
@@ -50,6 +52,25 @@ function DetailOrderAdmin() {
         }
     }, [params.id, orders])
 
+
+    const validatePackagedDetail = () => {
+        const msg = {}
+        if(orderDelivery.weight <= 0) {
+            msg.weight = '*Invalid Weight'
+        }
+        if(orderDelivery.length <= 0) {
+            msg.leng = '*Invalid Length'
+        }
+        if(orderDelivery.width <= 0) {
+            msg.width = '*Invalid Width'
+        }
+        if(orderDelivery.height <= 0) {
+            msg.height = '*Invalid Height'
+        }
+        setValidateMsg(msg)
+        if(Object.keys(msg).length > 0) return false
+        return true
+    }
 
     const handleChangeSatus = (e) => {
         setStatusOrder(e.target.value)
@@ -113,8 +134,9 @@ function DetailOrderAdmin() {
     }
     
     const checkShipFee = async (e) => {
+        const isValid = validatePackagedDetail()
+        if(!isValid) return
         try {
-  
             const date = new Date();
             date.setDate(date.getDate() + 1)
             const pick_date = Math.floor(date.getTime() / 1000);
@@ -178,6 +200,8 @@ function DetailOrderAdmin() {
     }
     const handleDeliveryToCarrier = async (e) => {
         e.preventDefault()
+        const isValid = validatePackagedDetail()
+        if(!isValid) return
         try {
             setLoading(true)
             const date = new Date();
@@ -322,10 +346,15 @@ function DetailOrderAdmin() {
                                 ` ${(detailOrder.address?.detailAddress || '')} ${detailOrder.address?.ward?.label}, 
                             ${detailOrder.address?.district?.label}, ${detailOrder.address?.city?.label}`}
                             </p>
-                            <a href="#!"
+                            {
+                                detailOrder.status === 'Delivering to the carrier' || detailOrder.status === 'Cancel' || detailOrder.status === 'Completed' ? null :
+                                <a href="#!"
                                 onClick={handleChangeAddress}>
                                 <FaEdit style={{ color: '#9e9e9e', cursor: 'pointer' }} />
-                            </a>
+                                </a> 
+
+                            }
+                            
                             <div className="address-form text-start" ref={addressRef}>
                                 <LocationForm element={"address-form"} onSave={(address) => HandleSubmitAddress(address)} initAddress={detailOrder.address?.city ? detailOrder.address : ''} />
                             </div>
@@ -350,9 +379,12 @@ function DetailOrderAdmin() {
                             <label>PHONE NUMBER</label>
                             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                                 <p>+84 {detailOrder.phone ? detailOrder.phone : 'NO'}</p>
-                                <a href="#!" onClick={() => handleChangePhone(detailOrder)}>
-                                    <FaEdit style={{ color: '#9e9e9e', cursor: 'pointer' }} />
-                                </a>
+                                {
+                                    detailOrder.status === 'Delivering to the carrier' || detailOrder.status === 'Cancel' || detailOrder.status === 'Completed' ? null :
+                                    <a href="#!" onClick={() => handleChangePhone(detailOrder)}>
+                                        <FaEdit style={{ color: '#9e9e9e', cursor: 'pointer' }} />
+                                    </a>
+                                }
                             </div>
                         </div>
                     </div>
@@ -424,18 +456,22 @@ function DetailOrderAdmin() {
                                 <div>
                                     <label>Weight (gram)</label>
                                     <input type='number' name="weight" value={orderDelivery.weight} onChange={handleOnChangeOrderDelivery} required/>
+                                    <span style={{color: 'red'}}>{validateMsg.weight}</span>
                                 </div>
                                 <div>
                                     <label>Length (cm)</label>
                                     <input type='number' name="length" value={orderDelivery.length} onChange={handleOnChangeOrderDelivery} required/>
+                                    <span style={{color: 'red'}}>{validateMsg.leng}</span>
                                 </div>
                                 <div>
                                     <label>Width (cm)</label>
                                     <input type='number' name="width" value={orderDelivery.width} onChange={handleOnChangeOrderDelivery} required/>
+                                    <span style={{color: 'red'}}>{validateMsg.width}</span>
                                 </div>
                                 <div>
                                     <label>Height (cm)</label>
                                     <input type='number' name="height" value={orderDelivery.height} onChange={handleOnChangeOrderDelivery} required/>
+                                    <span style={{color: 'red'}}>{validateMsg.height}</span>
                                 </div>
                             </div>
                         </div>
@@ -457,7 +493,8 @@ function DetailOrderAdmin() {
                                         <option value='2'> Receiver</option>
                                     </select>
                                 </div>
-                                <span onClick={checkShipFee} className="check-shipping-fee-btn">Check Ship Fee</span>
+                             
+                                <span onClick={checkShipFee} className="check-shipping-fee-btn" style={{fontSize: '25px'}}> <TbZoomMoney /></span>
                                 {
                                     shipFee !== 0 ? <span>{shipFee.toLocaleString('it-IT', {style : 'currency', currency : 'VND'})}</span> : null
                                 }

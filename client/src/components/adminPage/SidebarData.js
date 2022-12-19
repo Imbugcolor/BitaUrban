@@ -6,7 +6,7 @@ import * as GiIcons from "react-icons/gi"
 export const SidebarData = [
 
     {
-        title: 'Charts',
+        title: 'Statistics',
         path: '/chart',
         icon: <FaIcons.FaChartPie />
     },

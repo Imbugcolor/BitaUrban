@@ -38,6 +38,8 @@ function CreateProduct() {
     const ref = useRef(null)
     const fileUpRef = useRef()
 
+    const [validateMsg, setValidateMsg] = useState('')
+
     useEffect(() => {
         if (param.id) {
             setOnEdit(true)
@@ -59,6 +61,45 @@ function CreateProduct() {
             setColors([])
         }
     }, [param.id, products])
+
+    const validate = () => {
+        const msg = {}
+        const inStock = new Number(product.countInStock)
+        const colorsList = document.getElementsByClassName('item-color')
+        const color = []
+        for (let i = 0; i < colorsList.length; i++) {
+            if (colorsList[i].attributes.style) {
+                    color.push(colorsList[i].style.backgroundColor)
+            }
+        }
+        if(!product.product_id) {
+            msg.pro_id = '*Product ID is required'
+        }
+        if(!product.title) {
+            msg.title = '*Product title is required'
+        }
+        if(product.price < 0 ) {
+            msg.price = '*Product price must be greater than or equal to 0'
+        }
+        if(color.length === 0) {
+            msg.color = '*Product colors is required'
+        }
+        if(size.length === 0) {
+            msg.size = '*Product size is required'
+        }
+        if(product.countInStock < 0) {
+            msg.countInStock = '*Product in stock must greater than or equal to 0'
+        } else if (!Number.isInteger(inStock.valueOf())) {
+            msg.countInStock = '*Product in stock must be integer number'
+        }
+        if(!product.category) {
+            msg.cat = '*Product category is required'
+        }
+        console.log(color)
+        setValidateMsg(msg)
+        if(Object.keys(msg).length > 0) return false
+        return true
+    }
 
     const handleUpload = async (e) => {
         e.preventDefault()
@@ -119,7 +160,8 @@ function CreateProduct() {
 
     const handleSubmit = async e => {
         e.preventDefault()
-
+        const isValid = validate()
+        if(!isValid) return
         try {
             if (!isAdmin) return alert("You are not an admin.")
 
@@ -209,20 +251,23 @@ function CreateProduct() {
                     <form onSubmit={handleSubmit}>
                         <div className="row">
                             <label htmlFor="product_id">Product ID</label>
-                            <input type="text" name="product_id" id="product_id" required
+                            <input type="text" name="product_id" id="product_id" 
                                 value={product.product_id} onChange={handleChangeInput} disabled={onEdit} />
+                            <span className='validate-msg-product-create'>{validateMsg.pro_id}</span>
                         </div>
 
                         <div className="row">
                             <label htmlFor="title">Title</label>
-                            <input type="text" name="title" id="title" required
+                            <input type="text" name="title" id="title" 
                                 value={product.title} onChange={handleChangeInput} />
+                            <span className='validate-msg-product-create'>{validateMsg.title}</span>
                         </div>
 
                         <div className="row">
                             <label htmlFor="price">Price</label>
-                            <input type="number" name="price" id="price" required
+                            <input type="number" name="price" id="price" 
                                 value={product.price} onChange={handleChangeInput} />
+                            <span className='validate-msg-product-create'>{validateMsg.price}</span>
                         </div>
 
                         <div className="row">
@@ -256,8 +301,9 @@ function CreateProduct() {
                                     </div>
 
                                 </div>
+                                
                             </div>
-
+                            <span className='validate-msg-product-create'>{validateMsg.color}</span>      
                         </div>
                         <div className='color-picker-wrapper'>
                             <label htmlFor="head"> Choose color here:</label>
@@ -305,12 +351,14 @@ function CreateProduct() {
                                     <label htmlFor="">XXL</label>
                                 </div>
                             </div>
+                            <span className='validate-msg-product-create'>{validateMsg.size}</span>
                         </div>
 
                         <div className="row">
                             <label htmlFor="countInStock">In Stock</label>
-                            <input type="number" name="countInStock" id="countInStock" required
+                            <input type="number" name="countInStock" id="countInStock"
                                 value={product.countInStock} onChange={handleChangeInput} />
+                            <span className='validate-msg-product-create'>{validateMsg.countInStock}</span>
                         </div>
 
                         <div className="row">
@@ -338,6 +386,7 @@ function CreateProduct() {
 
                                 }
                             </select>
+                            <span className='validate-msg-product-create'>{validateMsg.cat}</span>
                         </div>
 
                         <button type="submit">{onEdit ? "Update" : "Create"}</button>

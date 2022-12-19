@@ -214,3 +214,8 @@ li.file-item .actions .delete-image {
     margin: 15px 20px;
     border-left: 2px solid #eee;
 }
+
+.validate-msg-product-create{
+    display: block;
+    color: red
+}
